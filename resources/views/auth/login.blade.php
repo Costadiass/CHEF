@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHEF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="font-sans bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <header class="bg-white text-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+            <a href="{{ route('home') }}" class="flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600 lucide lucide-chef-hat h-8 w-8 text-primary" data-lov-id="src/components/NavBar.tsx:21:14" data-lov-name="ChefHat" data-component-path="src/components/NavBar.tsx" data-component-line="21" data-component-file="NavBar.tsx" data-component-name="ChefHat" data-component-content="%7B%22className%22%3A%22h-8%20w-8%20text-primary%22%7D"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"></path><path d="M6 17h12"></path></svg>
+                <span class="font-semibold text-xl text-red-600">CHEF</span>
+            </a>
+            <nav class="hidden md:flex space-x-6 text-lg font-medium">
+                <a href="{{ route('home') }}" class="hover:text-red-600">Início</a>
+                <a href="{{ route('home') }}" class="hover:text-red-600">Recursos</a>
+                <a href="{{ route('home') }}" class="hover:text-red-600">Preços</a>
+                <a href="{{ route('home') }}" class="hover:text-red-600">Sobre</a>
+                <a href="{{ route('home') }}" class="hover:text-red-600">Contato</a>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('login') }}" class="border border-gray-800 px-4 py-2 rounded-md hover:bg-gray-800 hover:text-white  transition">Entrar</a>
+                <a href="{{ route('register') }}" class="bg-yellow-400 text-white px-6 py-2 rounded-md hover:bg-yellow-300 transition">Cadastre-se</a>
+            </div>
+        </div>
+    </header>
+
+
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: "{{ $errors->first() }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            })
+        </script>
+    @endif
+
+    @if(session('msg'))
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: "{{ session('msg') }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            })
+        </script>
+    @endif
+
+
+
+
+    <!-- Login Section -->
+    <section class="bg-gray-200 py-16 flex-grow">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-semibold text-center text-red-700 mb-6">Login</h2>
+                <form action="{{ route('login') }}" method="POST">
+                    @csrf
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-md @error('email') border-red-600 @enderror" value="{{ old('email') }}" placeholder="Digite seu email">
+                        @error('email')
+                            <span class="text-red-600 text-sm mt-2">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-6 relative">
+                        <label for="password" class="block text-gray-700 font-semibold mb-2">Senha</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-md pr-10 @error('password') border-red-600 @enderror"
+                            placeholder="Digite sua senha"
+                        >
+                        <button
+                            type="button"
+                            onclick="togglePassword()"
+                            class="mt-4 absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500"
+                        >
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+
+                        @error('password')
+                            <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-6">
+                        <button type="submit" class="w-full bg-yellow-400 text-white px-6 py-3 rounded-md hover:bg-yellow-300 transition">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white pt-12 pb-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div class="flex gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white-600 lucide lucide-chef-hat h-8 w-8 text-primary" data-lov-id="src/components/NavBar.tsx:21:14" data-lov-name="ChefHat" data-component-path="src/components/NavBar.tsx" data-component-line="21" data-component-file="NavBar.tsx" data-component-name="ChefHat" data-component-content="%7B%22className%22%3A%22h-8%20w-8%20text-primary%22%7D"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"></path><path d="M6 17h12"></path></svg>
+                <span class="font-bold text-2xl text-yellow-400"> CHEF</span>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-3">Institucional</h3>
+                <ul class="space-y-2">
+                    <li><a href="#sobre" class="hover:underline">Sobre</a></li>
+                    <li><a href="#depoimentos" class="hover:underline">Depoimentos</a></li>
+                    <li><a href="#contato" class="hover:underline">Contato</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-3">Ferramentas</h3>
+                <ul class="space-y-2">
+                    <li><a href="#recursos" class="hover:underline">Funcionalidades</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-3">Fale com a gente</h3>
+                <ul class="space-y-2">
+                    <li>+55 (31) xxxx-xxxx</li>
+                    <li><a href="mailto:chefereceitas@gmail.com" class="hover:underline">chefereceitas@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-10 pt-4 text-center text-sm text-gray-300">
+            &copy; 2025 - CHEF - Todos os direitos reservados
+        </div>
+    </footer>
+
+</body>
+</html>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            // opcional: trocar ícone para "olho aberto"
+            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a10.05 10.05 0 011.698-3.042m2.34-2.313A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-1.59 2.774M15 12a3 3 0 11-6 0 3 3 0 016 0z" />`;
+        } else {
+            passwordInput.type = "password";
+            // voltar ícone original
+            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+        }
+    }
+</script>
